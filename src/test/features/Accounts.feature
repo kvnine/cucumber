@@ -3,10 +3,10 @@ Feature: Accounts feature
 #  shopping basket features
 
   Scenario: create an account for customer
-    Given Launch the discovery app
-    When Fill the details of customer and click on Create Account button
-    Then Account should be created
-    And Account should be present in db
+    Given Launch the discovery web app
+#    When Fill the details of customer and click on Create Account button
+#    Then Account should be created
+#    And Account should be present in db
 
 
 
