@@ -1,8 +1,12 @@
+package stepDefs;
+
 import io.cucumber.core.gherkin.vintage.internal.gherkin.deps.com.google.gson.JsonObject;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.openqa.selenium.Alert;
@@ -20,6 +24,8 @@ import java.util.concurrent.TimeUnit;
 import static io.restassured.RestAssured.given;
 
 public class MyStepdefs {
+    WebDriver driver;
+    Response apiResponse;
 //    @Given("setup api inventory")
 //    public void setup_api_inventory() {
 //        System.out.println("setting info..............");
@@ -187,5 +193,138 @@ public class MyStepdefs {
 
     public void setResponseObj(Response responseObj) {
         this.responseObj = responseObj;
+    }
+
+
+    @Given("Launch the discovery web application")
+    public void launchTheDiscoveryWebApplication() {
+        //launching browser
+
+        //how to define string variable
+        String app_url = "https://demo.guru99.com/test/newtours/index.php";
+        //how to print it console log
+        System.out.println("Given url: " + app_url);
+
+        //how to set the driver location
+        System.setProperty("webdriver.chrome.driver", "C:\\Users\\KVR\\selenium\\TestAutomation\\BrowserDrivers\\chromedriver.exe");
+        //how to initiate the chrome driver
+        driver = new ChromeDriver();
+        //how to launch the application
+        driver.get(app_url);
+
+    }
+
+    @And("Provider username and password")
+    public void providerUsernameAndPassword() {
+
+        //how to enter value in a text box
+        String username_txt_box = "//input[@name='userName']";
+        WebElement x = driver.findElement(By.xpath(username_txt_box));
+        x.sendKeys("test");
+
+        //submitted my form.
+
+        String firstNameFromApp = x.getText();
+        System.out.println("First name in app showing: " + firstNameFromApp);
+
+
+
+        String password_txt_box = "//input[@name='password']";
+        driver.findElement(By.xpath(password_txt_box)).sendKeys("test");
+
+    }
+
+    @When("Click on Login button")
+    public void clickOnLoginButton() {
+        driver.findElement(By.xpath("//input[@name='submit']")).click();
+    }
+
+    @Then("Home page should be displayed")
+    public void homePageShouldBeDisplayed() {
+
+        if (driver.findElement(By.xpath("//h3[text()='Login Successfully']")).isDisplayed()){
+            System.out.println("Login is successful");
+        }else {
+            System.out.println("Login is not successful");
+        }
+    }
+
+    @Given("setup api inventory1")
+    public void setupApiInventory1() {
+//        RestAssured.baseURI = "https://jsonplaceholder.typicode.com";
+        RestAssured.baseURI = "https://reqres.in/api/users/";
+
+    }
+
+    @When("trigger get account api1")
+    public void triggerGetAccountApi1() {
+        apiResponse = given()
+                .contentType(ContentType.JSON)
+                .when()
+                .get("/")
+                .then()
+                .extract().response();
+
+    }
+
+    @When("trigger post account api1")
+    public void triggerPostAccountApi1() {
+        apiResponse = given()
+                .contentType(ContentType.JSON)
+                .when()
+                .body("{\n" +
+                        "  \"lname\": \"leader\",\n" +
+                        "  \"mname\": \"venkat\",\n" +
+                        "  \"address\": \"leader\"\n" +
+                        "}\n")
+                .post("/posts")
+                .then()
+                .extract().response();
+
+    }
+
+    @When("trigger update account api1")
+    public void triggerUpdateAccountApi1() {
+        apiResponse = given()
+                .contentType(ContentType.JSON)
+                .when()
+                .body("{\n" +
+                        "  \"name\": \"venkat\",\n" +
+                        "  \"job\": \"leader\"\n" +
+                        "}")
+                .put("/")
+                .then()
+                .extract().response();
+
+    }
+
+    @When("trigger delete account api1")
+    public void triggerDeleteAccountApi1() {
+        apiResponse = given()
+                .contentType(ContentType.JSON)
+                .when()
+                .delete("/1")
+                .then()
+                .extract().response();
+
+    }
+    @Then("verify books list is returned1")
+    public void verifyBooksListIsReturned1() {
+
+        if(apiResponse.getStatusCode() == 200){
+            System.out.println("pass");
+        }else {
+            System.out.println("fail");
+        }
+        System.out.println(apiResponse.getStatusCode());
+        System.out.println(apiResponse.asPrettyString());
+//        System.out.println(apiResponse.jsonPath().getString("title[1]"));
+
+    }
+
+    @And("Close Browser")
+    public void closeBrowser() {
+        driver.close();
+        driver.quit();
     }
 }
