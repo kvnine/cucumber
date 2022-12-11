@@ -1,0 +1,37 @@
+GitHub: Cloud server to manage remote git repositories.
+Gitbash: Cli tool to interact with git software
+Local git repositories(repos): Git repositories presented in local machine
+Remote git repositories(repos): Git repositories presented in remote(git hub)
+
+git clone https://helloapp/app.git
+    To get the code to local machine. It would be refered as git local repo. By default, it will download the 'master'
+    branch code
+git clone -b dev https:https://helloapp/app.git
+        To get the code to local machine. It would be referred as git local repo. It will download the dev branch
+        code
+Once code got download to local machine as git local repo we star working on the code.
+and add the automation test to the code.
+
+git checkout -b accounts
+    It will create new local branch with name accounts
+
+git checkout dev
+    It will switch to dev branch from accounts.
+
+git add .
+    It would add all the modified/newlyAdded files to the stage area
+
+git commit -m 'updated with automation code for create account functionality'
+    It would commit all the above add changes to the stage area
+git push origin accounts
+    It would push all the local git repo branch code to git remote repo.
+
+We will raise a pull request(PR) to initiate the merge from account branch to master branch.
+Our colleague or team lead will approve the PR and then merge will be successful.
+Now accounts branch code will be present in masters branch.
+Later we can delete accounts branch too.
+
+git pull origin master
+    It would pull the latest code from git remote branch(master) to local git repo.
+
+git chek
